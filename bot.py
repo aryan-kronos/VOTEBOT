@@ -1181,7 +1181,17 @@ async def register_participant(message: Message, user, ga):
     chan_kb.button(text='🗳 Vote (0)', callback_data=f"vote_{user.id}_{ga['ga_id']}", style='success')
     chan_kb.adjust(1)
     settings = await settings_col.find_one({'_id': 'global_vote_caption'})
-    template = settings.get('text') if settings else "<b><tg-emoji emoji-id='5949775417274536507'>⚡️</tg-emoji> PARTICIPANT:</b> {user.full_name}\n<b>ID:</b> {user.id}"
+    if settings and settings.get('text'):
+        template = settings['text']
+    else:
+        template = (
+            "💈🥂 <u><b>PARTICIPANT DETAILS</b></u> ❞\n\n"
+            "▸ <u><b>USER</b></u>: <b>{user.full_name}</b> 🔲 ❞\n"
+            "▸ <u><b>USER-ID</b></u>: <code>{user.id}</code>\n"
+            "▸ <u><b>USERNAME</b></u>: @{user.username}\n\n"
+            "💈⚠️ <u><b>NOTE</b></u>: ONLY CHANNEL SUBSCRIBERS CAN ❞\nVOTE\n\n"
+            f"💈💎 @{BOTUSER} ❞"
+        )
 
     # --- [Class Definition: Engineered & Authored by Aryan (@thatonearyan | https://t.me/thatonearyan)] ---
     class FormatUser:
