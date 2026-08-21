@@ -59,7 +59,7 @@ DEVELOPER_NAME = 'ᴀʀʏᴀɴ'
 DEVELOPER_USERNAME = 'thatonearyan'
 DEVELOPER_URL = 'https://t.me/thatonearyan'
 HOW_TO_USE_URL = os.getenv('HOW_TO_USE_URL', NETWORK_URL)
-VOTE_IM = os.getenv('VOTE_IMAGE_URL', 'https://files.catbox.moe/mkfcpr.jpg')
+VOTE_IM = os.getenv('VOTE_IMAGE_URL', 'https://files.catbox.moe/27qumy.jpg')
 PARTI_IMG = os.getenv('PARTICIPANT_IMAGE_URL', 'https://files.catbox.moe/27qumy.jpg')
 DEFAULT_UPI_ID = os.getenv('DEFAULT_UPI_ID', 'devanshsingh2@fam')
 POWERED_BY_TEXT = f"<tg-emoji emoji-id='5949775417274536507'>⚡️</tg-emoji> <b>ᴘᴏᴡᴇʀᴇᴅ ʙʏ:</b> <a href='{NETWORK_URL}'>{NETWORK_NAME}</a> | <a href='{DEVELOPER_URL}'>{DEVELOPER_NAME}</a> <tg-emoji emoji-id='5269617636001460986'>👨\u200d💻</tg-emoji>"
@@ -68,6 +68,15 @@ WELCOME_IMAGE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'a
 _cached_welcome_file_id = None
 
 # [Module Component: Developed & Built by Aryan | https://t.me/thatonearyan]
+
+def get_vote_image():
+    global _cached_welcome_file_id
+    if _cached_welcome_file_id:
+        return _cached_welcome_file_id
+    if os.path.exists(WELCOME_IMAGE_PATH):
+        return FSInputFile(WELCOME_IMAGE_PATH, filename='welcome.jpg')
+    return os.getenv('VOTE_IMAGE_URL', 'https://files.catbox.moe/27qumy.jpg')
+
 def get_welcome_image():
     global _cached_welcome_file_id
     if _cached_welcome_file_id:
@@ -91,7 +100,7 @@ def generate_upi_qr(upi_id: str, amount: str=None, note: str='VIP Membership') -
     img.save(buf, format='PNG')
     buf.seek(0)
     return buf.getvalue()
-VOTE_IM = 'https://files.catbox.moe/mkfcpr.jpg'
+# VOTE_IM purged
 PARTI_IMG = 'https://files.catbox.moe/27qumy.jpg'
 IST = pytz.timezone('Asia/Kolkata')
 logging.basicConfig(level=logging.INFO)
@@ -1206,7 +1215,7 @@ async def register_participant(message: Message, user, ga):
     except:
         caption = f"<tg-emoji emoji-id='5949775417274536507'>⚡️</tg-emoji> <b>Participant:</b> {html.quote(user.full_name)}"
     try:
-        sent = await bot.send_photo(chat_id=ga['target_channel_id'], photo=ga.get('custom_thumb') or VOTE_IM, caption=caption, reply_markup=chan_kb.as_markup())
+        sent = await bot.send_photo(chat_id=ga['target_channel_id'], photo=ga.get('custom_thumb') or get_vote_image(), caption=caption, reply_markup=chan_kb.as_markup())
     except Exception as e:
         await message.answer(f"<tg-emoji emoji-id='6053019808230805244'>❌</tg-emoji> <b>Error:</b> Could not post to target channel.\n{e}")
         return
@@ -1232,9 +1241,9 @@ async def send_ga_links(message: Message, user, ga_id):
     kb.row(InlineKeyboardButton(text='🔄 Get Links Again', callback_data=f'get_links_{ga_id}', style='primary'))
     kb.adjust(1, 1, 1)
     if isinstance(message, Message):
-        await message.answer_photo(photo=PARTI_IMG, has_spoiler=True, caption=text, reply_markup=kb.as_markup())
+        await message.answer_photo(photo=get_vote_image(), has_spoiler=True, caption=text, reply_markup=kb.as_markup())
     else:
-        await message.answer_photo(photo=PARTI_IMG, has_spoiler=True, caption=text, reply_markup=kb.as_markup())
+        await message.answer_photo(photo=get_vote_image(), has_spoiler=True, caption=text, reply_markup=kb.as_markup())
 
 # Handler Authored by Aryan (@thatonearyan | https://t.me/thatonearyan)
 @router.callback_query(F.data.startswith('get_links_'))
