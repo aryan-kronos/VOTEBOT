@@ -1,0 +1,10 @@
+aiogram
+motor
+pymongo
+pytz
+apscheduler
+shortuuid
+python-dotenv
+certifi
+qrcode
+pillow
