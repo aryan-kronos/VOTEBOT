@@ -2575,39 +2575,29 @@ async def broadcast_command(message: Message):
 
 # ---------------- BOT DESCRIPTION & ABOUT ENFORCER ---------------- #
 # [Security & Anti-Tamper Routine: Developed by Aryan | https://t.me/thatonearyan]
-BOT_TAGLINE = os.getenv("BOT_TAGLINE", "Fair & Automated Giveaway Bot\n!ᵎ! TRUST • POWER • INNOVATION ✦")
+BOT_TAGLINE = os.getenv("BOT_TAGLINE", "Fair & Automated Giveaway Bot\\n!ᵎ! TRUST • POWER • INNOVATION ✦")
 CUSTOM_BOT_DESCRIPTION = os.getenv("CUSTOM_BOT_DESCRIPTION", "")
+CUSTOM_BOT_ABOUT = os.getenv("CUSTOM_BOT_ABOUT", "")
 
 async def enforce_bot_description():
-    """
-    Enforces the bot description & about profile on Telegram via Bot API.
-    Allows user to customize header/tagline/about via .env, but ALWAYS locks
-    and injects Developer Aryan (@ThatOnearyan) permanently so it can NEVER be removed.
-    """
     try:
-        dev_line = "👨‍💻 DEVELOPER — ARYAN (@ThatOnearyan)"
-        
         if CUSTOM_BOT_DESCRIPTION:
-            # If user provided a custom description in .env, ensure developer line is locked in
-            clean_custom = CUSTOM_BOT_DESCRIPTION.strip()
-            if "@ThatOnearyan" not in clean_custom:
-                desc_text = f"{clean_custom}\n\n{dev_line}"
-            else:
-                desc_text = clean_custom
+            desc_text = CUSTOM_BOT_DESCRIPTION.replace("\\n", "\n").strip()
         else:
             desc_text = (
-                f"𖤍 — POWERED BY {NETWORK_NAME.upper()} ⚡️\n\n"
-                f"👑 OWNER — {SUPPORT_NAME.upper()} (@{SUPPORT_USERNAME})\n"
-                f"{dev_line}\n\n"
+                f"𖤍 — POWERED BY {NETWORK_NAME.upper()} ⚡️\\n\\n"
+                f"👑 OWNER — {SUPPORT_NAME.upper()} (@{SUPPORT_USERNAME})\\n"
+                f"👨‍💻 DEVELOPER — ARYAN (@ThatOnearyan)\\n\\n"
                 f"🎁 {BOT_TAGLINE}"
             )
-            
-        short_desc = f"{BRAND_NAME} Giveaway Bot | Developed by @ThatOnearyan"
-        
+        if CUSTOM_BOT_ABOUT:
+            short_desc = CUSTOM_BOT_ABOUT.replace("\\n", "\n").strip()
+        else:
+            short_desc = f"{BRAND_NAME} Giveaway Bot | Developed by @ThatOnearyan"
         await bot.set_my_description(description=desc_text)
         await bot.set_my_short_description(short_description=short_desc)
     except Exception as e:
-        logger.warning(f"Could not enforce bot description: {e}")
+        logger.warning(f"Could not update bot description/about: {e}")
 
 async def main():
     await enforce_bot_description()
