@@ -49,7 +49,7 @@
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Aryan-dot-sketch/VOTEBOT.git
+git clone https://github.com/aryan-kronos/VOTEBOT.git
 cd VOTEBOT
 ```
 
