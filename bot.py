@@ -271,8 +271,8 @@ async def run_global_resync():
                                 if isinstance(extras, dict):
                                     extras = [extras]
                                 for ch in extras:
-                                    chan_kb.button(text=f"<tg-emoji emoji-id='5424818078833715060'>📢</tg-emoji> Join {ch.get('title', 'Channel')}", url=ch['link'])
-                            chan_kb.button(text=f"<tg-emoji emoji-id='5409029744693897259'>🗳</tg-emoji> Vote ({new_count})", callback_data=f'vote_{participant_id}_{ga_id}')
+                                    chan_kb.button(text=f"📢 Join {ch.get('title', 'Channel')}", url=ch['link'])
+                            chan_kb.button(text=f"🗳 Vote ({new_count})", callback_data=f'vote_{participant_id}_{ga_id}')
                             chan_kb.adjust(1)
                             await bot.edit_message_reply_markup(chat_id=target_id, message_id=p_data['msg_id'], reply_markup=chan_kb.as_markup())
                         except Exception:
@@ -477,7 +477,7 @@ async def ask_target_channel(message: Union[Message, CallbackQuery], state: FSMC
     current_batch = valid_chats[start:end]
     kb = InlineKeyboardBuilder()
     for chat in current_batch:
-        kb.button(text=f"<tg-emoji emoji-id='5424818078833715060'>📢</tg-emoji> {chat['title']}", callback_data=f"sel_target_{chat['id']}", style='primary')
+        kb.button(text=f"📢 {chat['title']}", callback_data=f"sel_target_{chat['id']}", style='primary')
     kb.adjust(1)
     nav_row = []
     if page > 0:
@@ -573,13 +573,13 @@ async def render_channel_selector(message: Union[Message, CallbackQuery], state:
     current_batch = valid_chats[start_idx:end_idx]
     kb = InlineKeyboardBuilder()
     for chat in current_batch:
-        kb.button(text=f"<tg-emoji emoji-id='5424818078833715060'>📢</tg-emoji> {chat['title']}", callback_data=f"sel_{mode}_{chat['id']}")
+        kb.button(text=f"📢 {chat['title']}", callback_data=f"sel_{mode}_{chat['id']}")
     kb.adjust(1)
     nav_btns = []
     if page > 0:
         nav_btns.append(InlineKeyboardButton(text='⬅️️ Prev', callback_data=f'pg_{mode}_{page - 1}'))
     if total_pages > 1:
-        nav_btns.append(InlineKeyboardButton(text=f"<tg-emoji emoji-id='5395444784611480792'>📄</tg-emoji> {page + 1}/{total_pages}", callback_data='ignore'))
+        nav_btns.append(InlineKeyboardButton(text=f"📄 {page + 1}/{total_pages}", callback_data='ignore'))
     if page < total_pages - 1:
         nav_btns.append(InlineKeyboardButton(text='Next ➡️️', callback_data=f'pg_{mode}_{page + 1}'))
     if nav_btns:
@@ -1075,7 +1075,7 @@ async def resync_votes(message: Message, command: CommandObject):
                     if ga.get('extra_channel'):
                         kb.button(text=f'Join', url=ga['extra_channel']['link'], style='primary')
                     kb.adjust(1)
-                    kb.button(text=f"<tg-emoji emoji-id='5409029744693897259'>🗳</tg-emoji> Vote ({p_data['vote_count']})", callback_data=f'vote_{p_id}_{ga_id}', style='success')
+                    kb.button(text=f"🗳 Vote ({p_data['vote_count']})", callback_data=f'vote_{p_id}_{ga_id}', style='success')
                     kb.adjust(1, 1)
                     await bot.edit_message_reply_markup(chat_id=ga['target_channel_id'], message_id=p_data['msg_id'], reply_markup=kb.as_markup())
                 except:
@@ -1131,7 +1131,7 @@ async def handle_participation_flow(message: Message, user, ga_id):
     if missing:
         kb = InlineKeyboardBuilder()
         for ch in missing:
-            kb.button(text=f"<tg-emoji emoji-id='5424818078833715060'>📢</tg-emoji> Join {ch.get('title', 'Channel')}", url=ch['link'])
+            kb.button(text=f"📢 Join {ch.get('title', 'Channel')}", url=ch['link'])
         kb.adjust(1)
         kb.button(text='✅ I Have Joined', callback_data=f'verify_{ga_id}')
         await message.answer('👋 <b>Welcome!</b>\n\nTo enter this giveaway, you must join the required channels below first.', reply_markup=kb.as_markup())
@@ -1177,7 +1177,7 @@ async def register_participant(message: Message, user, ga):
         if isinstance(extras, dict):
             extras = [extras]
         for ch in extras:
-            chan_kb.button(text=f"<tg-emoji emoji-id='5424818078833715060'>📢</tg-emoji> Join", url=ch['link'], style='primary')
+            chan_kb.button(text=f"📢 Join", url=ch['link'], style='primary')
     chan_kb.button(text='🗳 Vote (0)', callback_data=f"vote_{user.id}_{ga['ga_id']}", style='success')
     chan_kb.adjust(1)
     settings = await settings_col.find_one({'_id': 'global_vote_caption'})
@@ -1853,7 +1853,7 @@ async def handle_channel_vote(call: CallbackQuery):
             extras = [extras]
         for ch in extras:
             chan_kb.button(text='📢 Join', url=ch['link'])
-    chan_kb.button(text=f"<tg-emoji emoji-id='5409029744693897259'>🗳</tg-emoji> Vote ({new_count})", callback_data=call.data)
+    chan_kb.button(text=f"🗳 Vote ({new_count})", callback_data=call.data)
     chan_kb.adjust(1)
     try:
         await call.message.edit_reply_markup(reply_markup=chan_kb.as_markup())
@@ -1979,7 +1979,7 @@ async def handle_approval(call: CallbackQuery):
         ga = await giveaways_col.find_one({'ga_id': txn['ga_id']})
         new_count = p['vote_count']
         kb = InlineKeyboardBuilder()
-        kb.button(text=f"<tg-emoji emoji-id='5409029744693897259'>🗳</tg-emoji> Vote ({new_count})", callback_data=f"vote_{p['user_id']}_{ga['ga_id']}")
+        kb.button(text=f"🗳 Vote ({new_count})", callback_data=f"vote_{p['user_id']}_{ga['ga_id']}")
         kb.adjust(1)
         try:
             await bot.edit_message_reply_markup(chat_id=p['channel_id'], message_id=p['msg_id'], reply_markup=kb.as_markup())
@@ -2500,7 +2500,7 @@ async def show_channel_selection(call: CallbackQuery, page: int):
     current_batch = valid_chats[start_idx:end_idx]
     kb = InlineKeyboardBuilder()
     for chat in current_batch:
-        kb.button(text=f"<tg-emoji emoji-id='5424818078833715060'>📢</tg-emoji> {chat['title']}", callback_data=f"publish_{chat['id']}")
+        kb.button(text=f"📢 {chat['title']}", callback_data=f"publish_{chat['id']}")
     kb.adjust(1)
     nav_buttons = []
     if page > 0:
